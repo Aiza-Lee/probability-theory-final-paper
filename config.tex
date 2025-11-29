@@ -1,0 +1,88 @@
+% --- 基础宏包 ---
+\usepackage{geometry}       % 页面布局
+\usepackage{fancyhdr}       % 页眉页脚
+\usepackage{setspace}       % 行间距
+\usepackage{titlesec}       % 标题样式定制
+\usepackage{caption}        % 图表标题美化
+\usepackage{booktabs}       % 专业三线表
+\usepackage{float}          % 图片浮动控制
+\usepackage{graphicx}       % 图片插入
+\usepackage{listings}       % 代码块
+\usepackage{xcolor}         % 颜色支持
+
+% --- 数学宏包 ---
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{mathrsfs}
+
+% --- 引用管理 (推荐使用 natbib 替代 cite) ---
+\usepackage[numbers,sort&compress]{natbib} 
+
+% --- 引用与超链接 (hyperref 通常建议最后加载) ---
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
+
+% --- 页面布局设置 ---
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\setlength{\parskip}{0.5em} % 段间距
+\setlength{\headheight}{14pt} % 修正 fancyhdr 警告
+\onehalfspacing             % 1.5倍行距 (适合中文阅读)
+
+% --- 页眉页脚设置 ---
+\pagestyle{fancy}
+\fancyhf{} % 清空当前设置
+\fancyhead[C]{\small 概率论期末结课论文} % 页眉居中内容
+\fancyfoot[C]{\thepage} % 页脚居中页码
+\renewcommand{\headrulewidth}{0.5pt} % 页眉分割线宽度
+
+% --- 图表标题美化 ---
+\captionsetup{font={small,bf}, labelfont={bf}} 
+
+% --- 概率论常用自定义命令 ---
+\newcommand{\E}{\mathbf{E}}     % 期望
+\renewcommand{\P}{\mathbb{P}}   % 概率
+\newcommand{\Var}{\mathbf{D}}   % 方差
+\newcommand{\Cov}{\mathrm{Cov}} % 协方差
+\newcommand{\R}{\mathbb{R}}     % 实数集
+\newcommand{\N}{\mathbb{N}}     % 自然数集
+\newcommand{\ind}{\mathbb{I}}   % 指示函数
+\newcommand{\diff}{\mathrm{d}}  % 积分微分符号
+
+% --- 中文常用字号快捷命令 ---
+% 用法：{\xiaosi 这里是小四号字}
+\newcommand{\chuhao}{\fontsize{42pt}{63pt}\selectfont}    % 初号
+\newcommand{\xiaochu}{\fontsize{36pt}{54pt}\selectfont}   % 小初
+\newcommand{\yihao}{\fontsize{28pt}{42pt}\selectfont}     % 一号
+\newcommand{\erhao}{\fontsize{21pt}{31.5pt}\selectfont}   % 二号
+\newcommand{\xiaoer}{\fontsize{18pt}{27pt}\selectfont}    % 小二
+\newcommand{\sanhao}{\fontsize{15.75pt}{24pt}\selectfont} % 三号
+\newcommand{\xiaosan}{\fontsize{15pt}{22.5pt}\selectfont} % 小三
+\newcommand{\sihao}{\fontsize{14pt}{21pt}\selectfont}     % 四号
+\newcommand{\xiaosi}{\fontsize{12pt}{18pt}\selectfont}    % 小四
+\newcommand{\wuhao}{\fontsize{10.5pt}{15.75pt}\selectfont}% 五号
+\newcommand{\xiaowu}{\fontsize{9pt}{13.5pt}\selectfont}   % 小五
+\newcommand{\liuhao}{\fontsize{7.875pt}{11.25pt}\selectfont}% 六号
+\newcommand{\xiaoliu}{\fontsize{5.25pt}{7.5pt}\selectfont}  % 小六
+
+% 设置衬线、非衬线、等宽字体
+\setmainfont{Times New Roman} % 设置正文字体为 Times New Roman
+\setmonofont{FiraCode Nerd Font} % 设置等宽字体为 FiraCode Nerd Font
+\setCJKmainfont[AutoFakeBold=true]{SimSun} % 设置中文正文字体为 SimSun
+\setCJKsansfont[AutoFakeBold=true]{SimHei}  % 设置中文无衬线字体为 SimHei
+
+% --- 定理环境设置 ---
+\newtheoremstyle{thmstyle}
+  {3pt}{3pt}              % 上下间距
+  {\itshape}{}            % 正文字体
+  {\bfseries}{.}          % 标题字体和标点
+  {0.5em}{}               % 标题后间距
+\theoremstyle{thmstyle}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{corollary}[theorem]{推论}
+
+\theoremstyle{definition}
+\newtheorem{definition}{定义}[section]
+\newtheorem{example}{例}[section]
+\newtheorem{remark}{注}[section]

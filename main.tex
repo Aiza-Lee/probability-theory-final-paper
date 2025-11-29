@@ -1,0 +1,54 @@
+\documentclass[a4paper,12pt]{ctexart} % 使用 ctexart 类，自带中文支持
+
+% 导入配置文件 (包含宏包、页面设置、自定义命令等)
+\input{config}
+
+% --- 论文信息 ---
+\title{
+	\textbf{\textsf{\erhao 概率论与数理统计课程小论文}}\\[1em]
+	\textbf{\textsf{\erhao 蒙特卡洛积分和MIS在路径追踪中的应用}}
+}
+\author{{\xiaoer
+	\begin{tabular}{|c|c|}
+		\hline
+		班级 & 计算机与电子通信15班 \\
+		\hline
+		学号 & 2024311381 \\
+		\hline
+		姓名 & 李杰 \\
+		\hline
+		日期 & \today \\
+		\hline
+		成绩 & \\
+		\hline
+	\end{tabular}
+}}
+\date{}
+
+\begin{document}
+
+% 生成标题
+\maketitle
+\newpage
+% 摘要
+\input{sections/abstract.tex}
+
+% % 目录
+% \thispagestyle{empty} % 目录页不显示页码
+% \tableofcontents
+\newpage
+\setcounter{page}{1} % 正文从第1页开始计数
+
+% --- 正文开始 ---
+
+% 引入各个章节
+\input{sections/preliminaries.tex}
+\input{sections/monte_carlo_integration.tex}
+\input{sections/path_tracing.tex}
+
+% --- 参考文献 ---
+\newpage
+\bibliographystyle{plain} % 参考文献样式
+\bibliography{references} % 对应 references.bib 文件
+
+\end{document}

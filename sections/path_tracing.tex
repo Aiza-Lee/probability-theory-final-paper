@@ -1,0 +1,36 @@
+\section{光线追踪和路径追踪}
+
+在图形学渲染领域，光线追踪是一种基于蒙特卡洛积分的，模拟场景中光线传播和能量传递、损失，并最终渲染为图像的技术。
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{pictures/光线追踪示意图.png}
+	\caption{光线追踪示意图（截图引自 GAMES101 公开课\cite{GAMES101}）}
+	\label{fig:games101-raytracing}
+\end{figure}
+
+\subsection{BRDF（双向反射分布函数）}
+基于辐射度量学\cite{GAMES101}，我们在物理世界上抽象出 BRDF，来描述光线的传播。
+
+BRDF。表示从某个微分的立体角接受的光照会如何映射到发出（反射）光照的方向和强度。
+用数学语言描述，对于位于$p$的面积微元上，定义双向反射分布函数：
+\begin{equation}
+	f(\omega_i \rightarrow \omega_r) := \frac{\mathrm d L_r(w_r)}{\mathrm d E(\omega_i)}
+ = \frac{\mathrm d L_r(w_r)}{L_i(\omega_i)\cos\theta_i\mathrm d \omega_i}.
+\end{equation}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\textwidth]{pictures/BRDF图示.png}
+	\caption{BRDF示意图（截图引自 GAMES101 公开课\cite{GAMES101}）}
+	\label{fig:games101-brdf}
+\end{figure}
+进而可以将某一点$p$在某个立体角方向$\omega_r$上的辐照度$L_r$表示为：
+\begin{equation}
+	L_r(\omega_r) = L_e(\omega_r) 
+		+ \int_{H^+} f(\omega_i \rightarrow \omega_r)
+					L_i(\omega_i)\cos \theta_i
+					\diff \omega_i.
+\end{equation}
+（注：公式中省略了表示该反射点的坐标的参数$p$）
+
+等式右侧的复杂积分式可以通过蒙特卡洛积分求解，关键在于如何选择合适的概率分布函数，进而选择何时的采样的立体角方向。
