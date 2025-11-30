@@ -1,5 +1,6 @@
 \section{蒙特卡洛积分}
 
+\subsection{定义}
 蒙特卡洛积分是一种利用随机采样来估计积分值的数值方法。其基本思想是通过在积分区域内随机生成点，然后根据这些点的函数值来近似计算积分。\cite{FoCG}
 
 形式化地，设我们要计算如下积分：
@@ -58,7 +59,7 @@ $\hat{I}$的方差：
 		+ \lambda \left( \int_{\Omega} p(x) \diff x - 1 \right) 
 		+ \mu (-p(x)).
 \end{equation}
-由KKT条件中的站点，对 $p(x)$ 求变微分并令其为零：
+由KKT条件中的站点条件，对 $p(x)$ 求变微分并令其为零：
 \begin{equation}
 	\frac{\delta\mathcal{L}}{\delta p(x)} = -\frac{f(x)^2}{p(x)^2} + \lambda - \mu = 0 .
 \end{equation}
@@ -66,7 +67,7 @@ $\hat{I}$的方差：
 \begin{equation}
 	p(x) = \frac{|f(x)|}{\sqrt{\lambda - \mu}} .
 \end{equation}
-由KKT条件中的可行性，即归一化条件，可以得到最优的概率分布为：
+由KKT条件中的可行性条件，即归一化条件，可以得到最优的概率分布为：
 \begin{equation}
 	p^*(x) = \frac{|f(x)|}{\int_{\Omega} |f(x)| \diff x} .
 \end{equation}

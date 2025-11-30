@@ -1,5 +1,6 @@
 \section{光线追踪和路径追踪}
 
+\subsection{路径追踪}
 在图形学渲染领域，光线追踪是一种基于蒙特卡洛积分的，模拟场景中光线传播和能量传递、损失，并最终渲染为图像的技术。
 
 \begin{figure}[H]
@@ -9,14 +10,20 @@
 	\label{fig:games101-raytracing}
 \end{figure}
 
+最终需要渲染的其实就是图~\ref{fig:games101-raytracing}中 “image plane” 上的每个像素点。
+
+光线追踪的问题在于，假设每各反射点需要反射的光线数量为$a$，限制的最大反射次数为$N$，最终需要计算单个像素的颜色的复杂度会达到$a^N$量级，这是无法接受的。
+路径追踪解决了这个问题，简单来说就是每个反射点只按照一定概率反射一条光线，但是在发出光线的时候对于每个像素点发出多条光线，并对最终的结果取平均。如果每个像素发射的光线数量为$b$，最终需要计算单个像素的颜色的复杂度
+为$bN$级别。
+
 \subsection{BRDF（双向反射分布函数）}
 基于辐射度量学\cite{GAMES101}，我们在物理世界上抽象出 BRDF，来描述光线的传播。
 
 BRDF。表示从某个微分的立体角接受的光照会如何映射到发出（反射）光照的方向和强度。
 用数学语言描述，对于位于$p$的面积微元上，定义双向反射分布函数：
 \begin{equation}
-	f(\omega_i \rightarrow \omega_r) := \frac{\mathrm d L_r(w_r)}{\mathrm d E(\omega_i)}
- = \frac{\mathrm d L_r(w_r)}{L_i(\omega_i)\cos\theta_i\mathrm d \omega_i}.
+	f(\omega_i \rightarrow \omega_r) := \frac{\diff L_r(w_r)}{\diff E(\omega_i)}
+ = \frac{\diff L_r(w_r)}{L_i(\omega_i)\cos\theta_i\diff \omega_i}.
 \end{equation}
 \begin{figure}[H]
 	\centering
@@ -33,4 +40,6 @@ BRDF。表示从某个微分的立体角接受的光照会如何映射到发出�
 \end{equation}
 （注：公式中省略了表示该反射点的坐标的参数$p$）
 
-等式右侧的复杂积分式可以通过蒙特卡洛积分求解，关键在于如何选择合适的概率分布函数，进而选择何时的采样的立体角方向。
+等式右侧的复杂积分式可以通过蒙特卡洛积分求解，关键在于如何选择合适的概率分布函数，进而选择合适的采样的立体角方向。
+
+\input{sections/basic_brdf_figures.tex}
