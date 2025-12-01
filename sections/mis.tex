@@ -1,0 +1,96 @@
+\section{多重重要性采样（MIS）}
+
+\subsection{简介}
+在大多数情况下，蒙特卡洛积分中的被积函数的BRDF和$L_i(\omega_i)$项都是非常复杂的，难以直接找到最优分布进行采样。
+单一的采样策略在某些边缘情况下可能会导致估计方差过大（在前文对最优分布的分析中有阐述），呈现在渲染结果上即为噪点。
+为了解决这一问题，多重重要性采样（Multiple Importance Sampling, MIS）被提出——通过多种采样方式的结合，
+有效降低了估计的方差，在有限的运算量中，往往对渲染结果的质量有很大的提升\cite{PBRT4}。
+
+\subsection{核心思想}
+基于蒙特卡洛积分，我们要解决的问题仍然是估计：
+\begin{equation}
+	I = \int_\Omega f(x) \diff x.
+\end{equation}
+
+但是现在，我们有多种采样方式可供选择，假设我们有$m$种采样方式，概率分布分别为$p_i(x), i=1,2,\ldots,m$。
+
+对于每一种采样方式，我们可以独立地进行采样，得到$n_i$个样本点$x_{i,1}, x_{i,2}, \ldots, x_{i,n_i}$。
+总的样本数为$N = \sum_{i=1}^m n_i$。
+
+定义平衡启发式权重函数为：
+\begin{equation}
+	w_i(x) = \frac{n_i p_i(x)}{\sum_{j=1}^m n_j p_j(x)}.
+\end{equation}
+
+记：
+\begin{equation}
+	S(x) = \sum_{j=1}^m n_j p_j(x).
+	\label{eq:mis-sum-pdf}
+\end{equation}
+
+至此，我们可以构造多重重要性采样的估计量\cite{Veach1995}为：
+\begin{equation}
+	\hat{I}_\text{MIS} = \sum_{i=1}^m \frac{1}{n_i} \sum_{k=1}^{n_i} \frac{f(x_{i,k}) w_i(x_{i,k})}{p_i(x_{i,k})}.
+\end{equation}
+
+同时可以得到 MIS 的混合采样分布为：
+\begin{equation}
+	p_\text{MIS}(x) = \frac{S(x)}{N} = \sum_{j=1}^m \frac{n_j}{N} p_j(x).
+\end{equation}
+
+\subsection{无偏性证明}
+多重重要性采样的估计量$\hat{I}_\text{MIS}$是$I$的无偏估计。证明如下：
+\begin{equation}
+	\begin{aligned}
+		\E \hat{I}_\text{MIS}
+		&= \E \left[ \sum_{i=1}^m \frac{1}{n_i} \sum_{k=1}^{n_i} \frac{f(X_{i,k}) w_i(X_{i,k})}{p_i(X_{i,k})} \right] \\
+		&= \sum_{i=1}^m \E \left[ \frac{f(X_{i,1}) w_i(X_{i,1})}{p_i(X_{i,1})} \right] \\
+		&= \sum_{i=1}^m \int_\Omega \frac{f(x) w_i(x)}{p_i(x)} p_i(x) \diff x \\
+		&= \sum_{i=1}^m \int_\Omega f(x) w_i(x) \diff x \\
+		&= \int_\Omega f(x) \left( \sum_{i=1}^m w_i(x) \right) \diff x \\
+		&= \int_\Omega f(x) \diff x = I.
+	\end{aligned}
+\end{equation}
+
+\subsection{方差分析}
+多重重要性采样估计量$\hat{I}_\text{MIS}$的方差：
+\begin{equation}
+	\begin{aligned}
+		\Var \hat{I}_\text{MIS}
+		&= \Var \left[ \sum_{i=1}^m \frac{1}{n_i} \sum_{k=1}^{n_i} \frac{f(X_{i,k}) w_i(X_{i,k})}{p_i(X_{i,k})} \right] \\
+		&= \sum_{i=1}^m \Var \left[ \frac{1}{n_i} \sum_{k=1}^{n_i} \frac{f(X_{i,k}) w_i(X_{i,k})}{p_i(X_{i,k})} \right] \\
+		&= \sum_{i=1}^m \frac{1}{n_i} \Var \left[ \frac{f(X_{i,1}) w_i(X_{i,1})}{p_i(X_{i,1})} \right] \\
+		&= \sum_{i=1}^m \frac{1}{n_i} \left( \E \left[ \frac{f(X_{i,1}) w_i(X_{i,1})}{p_i(X_{i,1})} \right]^2 - I^2 \right) \\
+		&= \sum_{i=1}^m \frac{1}{n_i} \left( \int_\Omega \frac{f(x)^2 w_i(x)^2}{p_i(x)} \diff x - I^2 \right).
+	\end{aligned}
+\end{equation}
+
+带入式~\eqref{eq:mis-sum-pdf}，可以得到：
+\begin{equation}
+	\Var \hat{I}_\text{MIS}
+	= \int_\Omega f(x)^2 \frac{1}{S(x)} \diff x - \left( \sum_{i=1}^m \frac{1}{n_i} \right) I^2.
+	\label{eq:mis-variance-simplified}
+\end{equation}
+
+考察式中$\frac{1}{S(x)}$：
+\begin{equation}
+	\frac{1}{S(x)} = \frac{1}{\sum_{j=1}^m n_j p_j(x)} \le \min_{1\le i \le m} \frac{1}{n_i p_i(x)}.
+	\label{eq:mis-variance-bound}
+\end{equation}
+
+将不等式~\eqref{eq:mis-variance-bound}带入式~\eqref{eq:mis-variance-simplified}，可以得到：
+\begin{equation*}
+	\Var \hat{I}_\text{MIS} \le \int_\Omega f(x)^2 \min_{1\le i \le m}\left\{ \frac{1}{n_i p_i(x)} \right\} \diff x - \left( \sum_{i=1}^m \frac{1}{n_i} \right) I^2.
+\end{equation*}
+
+进一步得到，对于任意单一采样策略$i$，对照单一采样策略方差表达式~\eqref{eq:mc-variance}，都有：
+\begin{equation}
+	\Var \hat{I}_\text{MIS} \le \int_\Omega f(x)^2 \frac{1}{n_i p_i(x)} \diff x - \frac{1}{n_i} I^2 = \Var \hat{I}_i.
+\end{equation}
+
+也即，多重重要性采样的方差不大于任意单一采样策略的方差，证明该估计在减小方差方面的有效性。
+
+同时，对于多重重要性采样的方差最小化问题，可以通过调整各采样策略的样本数量$n_i$来实现。
+该问题的具体分析较为复杂，这里不做展开。在工程实践中，通常会根据经验或预先的分析结果来分配各采样策略的样本数量。
+
+\input{sections/compare_mis_and_simple_figures.tex}

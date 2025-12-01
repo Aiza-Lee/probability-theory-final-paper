@@ -32,21 +32,24 @@ $\hat{I}$的方差：
 	\begin{aligned}
 		\Var \hat{I}
 		&= \Var \left[ \frac{1}{N} \sum_{i=1}^N \frac{f(X_i)}{p(X_i)} \right] \\
-		&= \frac{1}{N} \sum_{i=1}^N \Var \left[ \frac{f(X_i)}{p(X_i)} \right] \\
-		&= \Var \left[ \frac{f(X_1)}{p(X_1)} \right] \\
-		&= \E \left[ \frac{f(X_1)}{p(X_1)} \right]^2 - I^2 \\
-		&= \int_\Omega \frac{f(x)^2}{p(x)} \diff x - I^2.
+		&= \frac{1}{N^2} \sum_{i=1}^N \Var \left[ \frac{f(X_i)}{p(X_i)} \right] \\
+		&= \frac{1}{N} \Var \left[ \frac{f(X_1)}{p(X_1)} \right] \\
+		&= \frac{1}{N} \left( \E \left[ \frac{f(X_1)}{p(X_1)} \right]^2 - I^2 \right) \\
+		&= \frac{1}{N} \left( \int_\Omega \frac{f(x)^2}{p(x)} \diff x - I^2 \right).
 	\end{aligned}
+	\label{eq:mc-variance}
 \end{equation}
 
-从这里可以发现，当被积函数 $f(x)$ 在某些区域值较大时，如果采样分布 $p(x)$ 在这些区域的概率较小，则会导致方差增大。因此，选择合适的采样分布对于降低方差至关重要。
+显然，当采样次数$N$增加，方差会减小，对应渲染结果的噪点会更少。
+再看括号内部，当被积函数 $f(x)$ 在某些区域值较大时，如果采样分布 $p(x)$ 在这些区域的概率较小，则会导致方差增大。
 
+因此，选择合适的采样分布对于降低方差至关重要。
 更加具体地，使用拉格朗日乘子法\cite{Shuxueguihua2012}分析怎样的概率分布函数（采样策略）可以最小化方差。
 
 问题描述：
 \begin{equation}
 	\begin{aligned}
-		\min_{p(x)}\Var \hat{I} \\ 
+		\min_{p(x)} N \cdot \Var \hat{I} \\ 
 		\text{s.t.} \quad
 		\int_{\Omega} p(x) \diff x - 1 = 0 &\quad \\
 		-p(x) \le 0 &\quad.
@@ -59,14 +62,14 @@ $\hat{I}$的方差：
 		+ \lambda \left( \int_{\Omega} p(x) \diff x - 1 \right) 
 		+ \mu (-p(x)).
 \end{equation}
-由KKT条件中的站点条件，对 $p(x)$ 求变微分并令其为零：
-\begin{equation}
+由KKT条件中的驻点条件，对 $p(x)$ 求变微分并令其为零：
+\begin{equation*}
 	\frac{\delta\mathcal{L}}{\delta p(x)} = -\frac{f(x)^2}{p(x)^2} + \lambda - \mu = 0 .
-\end{equation}
+\end{equation*}
 化简后得到：
-\begin{equation}
+\begin{equation*}
 	p(x) = \frac{|f(x)|}{\sqrt{\lambda - \mu}} .
-\end{equation}
+\end{equation*}
 由KKT条件中的可行性条件，即归一化条件，可以得到最优的概率分布为：
 \begin{equation}
 	p^*(x) = \frac{|f(x)|}{\int_{\Omega} |f(x)| \diff x} .

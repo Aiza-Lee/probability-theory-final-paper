@@ -1,0 +1,73 @@
+\subsection{比较多重重要性采样和单一采样策略的方差}
+
+MIS 在路径追踪中最常见的应用场景是结合光源采样和BRDF采样两种策略。
+
+在~\eqref{eq:mc-variance}的分析中，我们已经知道，$f(x)$在某些区域值较大时，如果采样分布$p(x)$在这些区域的概率较小，则会导致方差增大。
+在实际渲染过程中，$f(x)$较大的区域通常对应于光源方向附近（入射光照$L_i$较大）以及BRDF函数值较大的方向（例如高光反射方向）。
+因此，单一采样策略往往难以同时兼顾这两种情况，从而导致较大的方差。
+而MIS通过结合多种采样策略，可以更好地覆盖$f(x)$较大的区域，从而有效降低方差。
+
+这里将展示结合光源采样和BRDF采样的MIS策略与单一采样策略在渲染效果上的差异。
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{pictures/misvssingle/mis_comparison_1_mis.png}
+		\caption{MIS混合采样策略}
+		\label{fig:mis-vs-single-comparison-1-mis}
+	\end{subfigure} \\
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{pictures/misvssingle/mis_comparison_2_light.png}
+		\caption{单一光源采样策略}
+		\label{fig:mis-vs-single-comparison-2-light}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{pictures/misvssingle/mis_comparison_3_material.png}
+		\caption{单一BRDF采样策略}
+		\label{fig:mis-vs-single-comparison-3-material}
+	\end{subfigure}
+	\caption{不同采样策略下的渲染结果对比（上：MIS，左下：光源采样，右下：BRDF采样）}
+	\label{fig:mis-vs-single-comparison-1}
+\end{figure}
+该图是对Veach论文\cite{Veach1995}中MIS效果的复现实验，整个场景有微弱的环境光照，和五个大小，颜色互异的球状光源，
+在下方是四面模糊度不同的长方形镜子。
+
+从图~\ref{fig:mis-vs-single-comparison-1}中可以明显看出，MIS策略的渲染结果噪点更少，质量更高。
+
+相应的，从光源直接采样的单一光源策略在对红色的小光源的采样上效果较好，但在大面积光源的采样上，
+会因为从光源采样的方向和镜面反射的方向不匹配导致噪点较多。
+按照材质的性质进行BRDF采样的单一材质策略在对大面积光源的采样上效果较好，因为随机反射的方向大概率会落在光源区域，
+同理对小光源的采样效果较差。
+
+降低渲染的方差的作用不仅仅在与提高图片质量，还在于可以减少每个像素的采样次数，从而提高渲染效率。
+下面会展示在相同采样次数下，MIS和单一采样策略的渲染效果的明显差异。
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{pictures/misvssingle/playground_mis.png}
+		\caption{MIS策略，每像素采样100次}
+		\label{fig:mis-vs-single-comparison-playground-mis}
+	\end{subfigure} \\
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{pictures/misvssingle/playground_light.png}
+		\caption{单一光源策略，每像素采样100次}
+		\label{fig:mis-vs-single-comparison-playground-light}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{pictures/misvssingle/playground_material.png}
+		\caption{单一BRDF策略，每像素采样100次}
+		\label{fig:mis-vs-single-comparison-playground-material}
+	\end{subfigure}
+	\caption{不同采样策略下的渲染效率对比（上：MIS，左下：光源采样，右下：BRDF采样）}
+	\label{fig:mis-vs-single-comparison-playground}
+\end{figure}
+
+从图~\ref{fig:mis-vs-single-comparison-playground}中可以明显看出，在相同采样次数下，MIS策略的渲染结果质量显著优于单一采样策略，
+噪点更少，细节更清晰。
+这进一步验证了MIS在降低方差和提高渲染效率方面的优势。

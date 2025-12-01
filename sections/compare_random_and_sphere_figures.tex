@@ -1,25 +1,20 @@
-\subsection{比较随机采样和按照被积函数采样}
+\subsection{漫反射材质下不同采样策略的比较}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics{pictures/漫反射brdf.png}
+	\includegraphics[width=0.6\textwidth]{pictures/漫反射brdf.png}
 	\caption{漫反射BRDF（截图引自 GAMES101 公开课\cite{GAMES101}）}
 	\label{fig:lambertian-brdf}
 \end{figure}
 
 漫反射BRDF（朗伯反射），其BRDF函数值为常数，如图~\ref{fig:lambertian-brdf}所示。
-本节使用该材质展示不同的采样策略对最终渲染效果的影响。
+本节使用该材质展示不同的采样次数对最终渲染效果的影响。
 
 策略一：在上半球上随机采样。
 
-策略二：按照入射光照立体角方向和平面夹角的余弦值进行采样
-（即按照被积函数$(\text{BRDF}\cdot L_i \cos\theta_i$)进行采样）。
+策略二：按照入射光照立体角方向和平面夹角的余弦值$\cos\theta_i$进行采样。
 
-预期的渲染效果差异：
-两种策略的不同不影响蒙特卡洛积分本身的无偏性，但是在方差上，策略一会比策略二的更大，
-渲染结果体现为更多的噪点。
-
-实际渲染效果差异：
+实际渲染效果：
 
 \begin{figure}[H]
 	\centering
@@ -52,7 +47,7 @@
 \end{figure}
 
 从图~\ref{fig:sampling-comparison}中可以明显看出，随着每像素采样次数的增加，
-噪点逐渐减少，渲染效果更好，无偏性得到验证。
+噪点逐渐减少，渲染效果更好，无偏性和方差减小得到验证。
 
-对于两种采样策略的差异，体现得并不明显，在图~\ref{fig:comparison_sampling_50}和~\ref{fig:comparison_sampling_100}中会相对明显，
-可以观察到采用按照被积函数分布的采样策略，得到的图像的噪点较少。
+对于两种采样策略的差异，体现得并不明显，原因在于被积函数具体的形状是未知的，两种采样策略在最终效果上差异不大，
+但是还是可以观察到，在上顶点处光照强度较大的地方，使用按照$\cos\theta_i$采样的效果更好一些，因为该采样策略更倾向于在该区域采样，从而降低了方差。
