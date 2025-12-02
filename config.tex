@@ -1,3 +1,5 @@
+\usepackage{fontspec}      % 字体设置依赖
+
 % --- 基础宏包 ---
 \usepackage{geometry}       % 页面布局
 \usepackage{fancyhdr}       % 页眉页脚
@@ -66,11 +68,19 @@
 \newcommand{\liuhao}{\fontsize{7.875pt}{11.25pt}\selectfont}% 六号
 \newcommand{\xiaoliu}{\fontsize{5.25pt}{7.5pt}\selectfont}  % 小六
 
-% 设置衬线、非衬线、等宽字体
-\setmainfont{Times New Roman} % 设置正文字体为 Times New Roman
-\setmonofont{FiraCode Nerd Font} % 设置等宽字体为 FiraCode Nerd Font
-\setCJKmainfont[AutoFakeBold=true]{SimSun} % 设置中文正文字体为 SimSun
-\setCJKsansfont[AutoFakeBold=true]{SimHei}  % 设置中文无衬线字体为 SimHei
+% 设置衬线、非衬线、等宽字体（带字体可用性判断）
+\IfFontExistsTF{Times New Roman}
+  {\setmainfont{Times New Roman}}
+  {\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{FiraCode Nerd Font}
+  {\setmonofont{FiraCode Nerd Font}}
+  {\setmonofont{Fira Code}}
+\IfFontExistsTF{SimSun}
+  {\setCJKmainfont[AutoFakeBold=true]{SimSun}}
+  {\setCJKmainfont[AutoFakeBold=true]{Source Han Serif SC}}
+\IfFontExistsTF{SimHei}
+  {\setCJKsansfont[AutoFakeBold=true]{SimHei}}
+  {\setCJKsansfont[AutoFakeBold=true]{Source Han Sans SC}}
 
 % --- 定理环境设置 ---
 \newtheoremstyle{thmstyle}
