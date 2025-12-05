@@ -17,9 +17,10 @@
 对于每一种采样方式，我们可以独立地进行采样，得到$n_i$个样本点$x_{i,1}, x_{i,2}, \ldots, x_{i,n_i}$。
 总的样本数为$N = \sum_{i=1}^m n_i$。
 
-定义平衡启发式权重函数为：
+定义权重函数为：
 \begin{equation}
 	w_i(x) = \frac{n_i p_i(x)}{\sum_{j=1}^m n_j p_j(x)}.
+	\label{eq:mis-weight-function}
 \end{equation}
 
 记：
@@ -51,6 +52,8 @@
 		&= \int_\Omega f(x) \diff x = I.
 	\end{aligned}
 \end{equation}
+
+可以看出，该估计量的无偏性依赖于权重函数\eqref{eq:mis-weight-function} 的归一化性质，即$\sum_{i=1}^m w_i(x) = 1$。
 
 \subsection{方差分析}
 多重重要性采样估计量$\hat{I}_\text{MIS}$的方差：
