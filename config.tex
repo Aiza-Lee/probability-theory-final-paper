@@ -20,6 +20,11 @@
 \usepackage{bm}
 \usepackage{mathrsfs}
 
+% 让公式、图片、表格按章节编号 (例如: (1.1), 图 2.1)
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+
 % --- 引用管理 (推荐使用 natbib 替代 cite) ---
 \usepackage[numbers,sort&compress]{natbib} 
 

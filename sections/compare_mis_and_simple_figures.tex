@@ -2,7 +2,7 @@
 
 MIS 在路径追踪中最常见的应用场景是结合光源采样和BRDF采样两种策略。
 
-在~\eqref{eq:mc-variance}的分析中，我们已经知道，$f(x)$在某些区域值较大时，如果采样分布$p(x)$在这些区域的概率较小，则会导致方差增大。
+在~\eqref{eq:mc-variance}的分析中，已经知道，$f(x)$在某些区域值较大时，如果采样分布$p(x)$在这些区域的概率较小，则会导致方差增大。
 在实际渲染过程中，$f(x)$较大的区域通常对应于光源方向附近（入射光照$L_i$较大）以及BRDF函数值较大的方向（例如高光反射方向）。
 因此，单一采样策略往往难以同时兼顾这两种情况，从而导致较大的方差。
 而MIS通过结合多种采样策略，可以更好地覆盖$f(x)$较大的区域，从而有效降低方差。
@@ -32,8 +32,10 @@ MIS 在路径追踪中最常见的应用场景是结合光源采样和BRDF采样
 	\caption{不同采样策略下的渲染结果对比（上：MIS，左下：光源采样，右下：BRDF采样）}
 	\label{fig:mis-vs-single-comparison-1}
 \end{figure}
-该图是对Veach论文\cite{Veach1995}中MIS效果的复现实验，整个场景有微弱的环境光照，和五个大小，颜色互异的球状光源，
-在下方是四面模糊度不同的长方形镜子。
+该图是对Veach论文\cite{Veach1995}中MIS效果的复现实验。
+场景的最上方是$5$个大小，颜色互异的球状光源，
+下方是四面模糊度不同的长方形镜面（从上倒下模糊度递增）。
+相机可以通过镜面反射看到光源（下方看到的$20$个亮斑），也可以直接看到光源（最上面看到的$5$个光源）。
 
 从图~\ref{fig:mis-vs-single-comparison-1}中可以明显看出，MIS策略的渲染结果噪点更少，质量更高。
 
@@ -49,19 +51,19 @@ MIS 在路径追踪中最常见的应用场景是结合光源采样和BRDF采样
 	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{pictures/misvssingle/playground_mis.png}
-		\caption{MIS策略，每像素采样100次}
+		\caption{MIS策略，每像素采样300次}
 		\label{fig:mis-vs-single-comparison-playground-mis}
 	\end{subfigure} \\
 	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{pictures/misvssingle/playground_light.png}
-		\caption{单一光源策略，每像素采样100次}
+		\caption{单一光源策略，每像素采样300次}
 		\label{fig:mis-vs-single-comparison-playground-light}
 	\end{subfigure}
 	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{pictures/misvssingle/playground_material.png}
-		\caption{单一BRDF策略，每像素采样100次}
+		\caption{单一BRDF策略，每像素采样300次}
 		\label{fig:mis-vs-single-comparison-playground-material}
 	\end{subfigure}
 	\caption{不同采样策略下的渲染效率对比（上：MIS，左下：光源采样，右下：BRDF采样）}
